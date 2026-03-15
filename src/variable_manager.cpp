@@ -1,4 +1,4 @@
-#include "formula/variable_manager.h"
+﻿#include "formula/variable_manager.h"
 #include <mutex>
 
 namespace formula {
@@ -17,7 +17,7 @@ Value VariableManager::getVariable(const std::string& name) const {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     auto it = variables_.find(name);
     if (it == variables_.end()) {
-        throw VariableException("变量不存在: " + name);
+        throw VariableException("Variable does not exist: " + name);
     }
     return it->second;
 }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <cstdint>
 #include <string>
@@ -8,16 +8,16 @@
 namespace formula {
 
 /**
- * Value 类型枚举
+ * Value type enumeration
  */
 enum class ValueType {
-    BOOL,    // 布尔类型
-    INT,     // 整数类型
-    DOUBLE   // 浮点类型
+    BOOL,    // Boolean type
+    INT,     // Integer type
+    DOUBLE   // Floating-point type
 };
 
 /**
- * Value 类型转换异常
+ * Value type conversion exception
  */
 class ValueTypeException : public std::runtime_error {
 public:
@@ -25,71 +25,71 @@ public:
 };
 
 /**
- * Value 类 - 支持 bool、int64_t、double 三种类型
- * 使用 union 存储实际值，提供类型安全的访问接口
+ * Value class - supports bool, int64_t, double types
+ * Uses union to store actual value, provides type-safe access interface
  */
 class Value {
 public:
-    // 默认构造函数，初始化为 double 类型的 0.0
+    // Default constructor, initializes to double 0.0
     Value();
 
-    // 从 bool 构造
+    // Construct from bool
     Value(bool value);
 
-    // 从 int 构造
+    // Construct from int
     Value(int value);
 
-    // 从 int64_t 构造
+    // Construct from int64_t
     Value(int64_t value);
 
-    // 从 double 构造
+    // Construct from double
     Value(double value);
 
-    // 拷贝构造函数
+    // Copy constructor
     Value(const Value& other);
 
-    // 移动构造函数
+    // Move constructor
     Value(Value&& other) noexcept;
 
-    // 拷贝赋值运算符
+    // Copy assignment operator
     Value& operator=(const Value& other);
 
-    // 移动赋值运算符
+    // Move assignment operator
     Value& operator=(Value&& other) noexcept;
 
-    // 析构函数
+    // Destructor
     ~Value() = default;
 
-    // 获取类型
+    // Get type
     ValueType getType() const { return type_; }
 
-    // 类型检查
+    // Type checking
     bool isBool() const { return type_ == ValueType::BOOL; }
     bool isInt() const { return type_ == ValueType::INT; }
     bool isDouble() const { return type_ == ValueType::DOUBLE; }
 
-    // 转换为 bool（支持所有类型的转换）
+    // Convert to bool (supports conversion from all types)
     bool asBool() const;
 
-    // 转换为 int64_t（支持所有类型的转换）
+    // Convert to int64_t (supports conversion from all types)
     int64_t asInt() const;
 
-    // 转换为 double（支持所有类型的转换）
+    // Convert to double (supports conversion from all types)
     double asDouble() const;
 
-    // 获取原始值（仅当类型匹配时可用）
+    // Get original value (only available when type matches)
     bool getBool() const;
     int64_t getInt() const;
     double getDouble() const;
 
-    // 相等比较
+    // Equality comparison
     bool operator==(const Value& other) const;
     bool operator!=(const Value& other) const;
 
-    // 转换为字符串表示
+    // Convert to string representation
     std::string toString() const;
 
-    // 流输出操作符
+    // Stream output operator
     friend std::ostream& operator<<(std::ostream& os, const Value& value);
 
 private:
@@ -102,7 +102,7 @@ private:
 };
 
 /**
- * 将 ValueType 转换为字符串
+ * Convert ValueType to string
  */
 const char* valueTypeToString(ValueType type);
 

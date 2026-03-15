@@ -1,4 +1,4 @@
-#include "formula/parser.h"
+﻿#include "formula/parser.h"
 #include <stdexcept>
 #include <sstream>
 
@@ -16,7 +16,7 @@ std::unique_ptr<AstNode> Parser::parse() {
         throw ParseException(error_);
     }
     if (!isAtEnd()) {
-        error("解析未完成");
+        error("Parsing incomplete");
         throw ParseException(error_);
     }
     return node;
@@ -41,7 +41,7 @@ std::unique_ptr<AstNode> Parser::ternary() {
 
     if (match(TokenType::QUESTION)) {
         auto trueExpr = ternary();
-        consume(TokenType::COLON, "期望 ':' 在三元运算符中");
+        consume(TokenType::COLON, "Expected ':' in ternary operator");
         auto falseExpr = ternary();
         node = std::make_unique<TernaryOpNode>(std::move(node), std::move(trueExpr), std::move(falseExpr));
     }
@@ -160,7 +160,7 @@ std::unique_ptr<AstNode> Parser::primary() {
     if (match(TokenType::IDENTIFIER)) {
         std::string name = previous().value;
 
-        // 检查是否是函数调用
+        // Check if it is a function call
         if (match(TokenType::LEFT_PAREN)) {
             std::vector<std::unique_ptr<AstNode>> args;
 
@@ -170,21 +170,21 @@ std::unique_ptr<AstNode> Parser::primary() {
                 } while (match(TokenType::COMMA));
             }
 
-            consume(TokenType::RIGHT_PAREN, "期望 ')'");
+            consume(TokenType::RIGHT_PAREN, "Expected ')'");
             return std::make_unique<FunctionCallNode>(name, std::move(args));
         }
 
-        // 变量
+        // Variable
         return std::make_unique<VariableNode>(name);
     }
 
     if (match(TokenType::LEFT_PAREN)) {
         auto node = expression();
-        consume(TokenType::RIGHT_PAREN, "期望 ')'");
+        consume(TokenType::RIGHT_PAREN, "Expected ')'");
         return node;
     }
 
-    error("期望表达式");
+    error("Expected expression");
     return nullptr;
 }
 
@@ -240,9 +240,9 @@ void Parser::error(const std::string& message) {
     if (!error_.empty()) return;
 
     std::ostringstream oss;
-    oss << "解析错误 [位置 " << peek().position << "]: " << message;
+    oss << "Parse error [position " << peek().position << "]: " << message;
     if (peek().type != TokenType::END) {
-        oss << "，遇到 '" << peek().value << "'";
+        oss << ", got '" << peek().value << "'";
     }
     error_ = oss.str();
 }

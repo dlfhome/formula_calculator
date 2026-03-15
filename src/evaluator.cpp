@@ -1,4 +1,4 @@
-#include "formula/evaluator.h"
+﻿#include "formula/evaluator.h"
 #include <cmath>
 #include <stdexcept>
 
@@ -13,7 +13,7 @@ Evaluator::Evaluator(std::shared_ptr<VariableManager> varManager,
 
 Value Evaluator::evaluate(AstNode* node) {
     if (!node) {
-        throw std::runtime_error("空节点");
+        throw std::runtime_error("Null node");
     }
     return node->accept(this);
 }
@@ -23,7 +23,7 @@ Value Evaluator::visitBinaryOp(BinaryOpNode* node) {
     Value right = evaluate(node->right.get());
 
     switch (node->op) {
-        // 算术运算符
+        // Arithmetic operators
         case TokenType::PLUS:
         case TokenType::MINUS:
         case TokenType::MULTIPLY:
@@ -32,25 +32,25 @@ Value Evaluator::visitBinaryOp(BinaryOpNode* node) {
         case TokenType::POWER:
             return performArithmetic(left, right, node->op);
 
-        // 比较运算符
+        // Comparison operators
         case TokenType::GREATER:
         case TokenType::LESS:
         case TokenType::GREATER_EQUAL:
         case TokenType::LESS_EQUAL:
             return performComparison(left, right, node->op);
 
-        // 相等性运算符
+        // Equality operators
         case TokenType::EQUAL:
         case TokenType::NOT_EQUAL:
             return performEquality(left, right, node->op);
 
-        // 逻辑运算符
+        // Logical operators
         case TokenType::LOGICAL_AND:
         case TokenType::LOGICAL_OR:
             return performLogical(left, right, node->op);
 
         default:
-            throw std::runtime_error("未知的二元运算符");
+            throw std::runtime_error("Unknown binary operator");
     }
 }
 
@@ -65,14 +65,14 @@ Value Evaluator::visitUnaryOp(UnaryOpNode* node) {
         case TokenType::LOGICAL_NOT:
             return Value(!operand.asBool());
         default:
-            throw std::runtime_error("未知的一元运算符");
+            throw std::runtime_error("Unknown unary operator");
     }
 }
 
 Value Evaluator::visitTernaryOp(TernaryOpNode* node) {
     Value condition = evaluate(node->condition.get());
 
-    // 根据条件选择分支
+    // Select branch based on condition
     if (condition.asBool()) {
         return evaluate(node->trueExpr.get());
     } else {
@@ -85,30 +85,30 @@ Value Evaluator::visitNumber(NumberNode* node) {
 }
 
 Value Evaluator::visitVariable(VariableNode* node) {
-    // 先检查是否是常量
+    // First check if it is a constant
     if (constRegistry_->hasConstant(node->name)) {
         return Value(constRegistry_->getConstant(node->name));
     }
-    // 再检查变量
+    // Then check variable
     return varManager_->getVariable(node->name);
 }
 
 Value Evaluator::visitFunctionCall(FunctionCallNode* node) {
     auto funcInfo = funcRegistry_->getFunction(node->name);
 
-    // 计算参数值
+    // Calculate argument values
     std::vector<Value> args;
     args.reserve(node->arguments.size());
     for (auto& arg : node->arguments) {
         args.push_back(evaluate(arg.get()));
     }
 
-    // 检查参数个数
+    // Check argument count
     if (funcInfo.arity != -1 && static_cast<int>(args.size()) != funcInfo.arity) {
-        throw std::runtime_error("函数 " + node->name + " 参数个数错误");
+        throw std::runtime_error("Function " + node->name + ": invalid argument count");
     }
 
-    // 将 Value 转换为 double 调用函数
+    // Convert Value to double and call function
     std::vector<double> doubleArgs;
     doubleArgs.reserve(args.size());
     for (const auto& arg : args) {
@@ -131,18 +131,18 @@ Value Evaluator::performArithmetic(Value left, Value right, TokenType op) {
             return Value(l * r);
         case TokenType::DIVIDE:
             if (r == 0.0) {
-                throw std::runtime_error("除零错误");
+                throw std::runtime_error("Division by zero");
             }
             return Value(l / r);
         case TokenType::MODULO:
             if (r == 0.0) {
-                throw std::runtime_error("除零错误");
+                throw std::runtime_error("Division by zero");
             }
             return Value(std::fmod(l, r));
         case TokenType::POWER:
             return Value(std::pow(l, r));
         default:
-            throw std::runtime_error("未知的算术运算符");
+            throw std::runtime_error("Unknown arithmetic operator");
     }
 }
 
@@ -160,7 +160,7 @@ Value Evaluator::performComparison(Value left, Value right, TokenType op) {
         case TokenType::LESS_EQUAL:
             return Value(l <= r);
         default:
-            throw std::runtime_error("未知的比较运算符");
+            throw std::runtime_error("Unknown comparison operator");
     }
 }
 
@@ -173,7 +173,7 @@ Value Evaluator::performEquality(Value left, Value right, TokenType op) {
         case TokenType::NOT_EQUAL:
             return Value(!result);
         default:
-            throw std::runtime_error("未知的相等性运算符");
+            throw std::runtime_error("Unknown equality operator");
     }
 }
 
@@ -187,7 +187,7 @@ Value Evaluator::performLogical(Value left, Value right, TokenType op) {
         case TokenType::LOGICAL_OR:
             return Value(l || r);
         default:
-            throw std::runtime_error("未知的逻辑运算符");
+            throw std::runtime_error("Unknown logical operator");
     }
 }
 

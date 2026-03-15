@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "formula/ast.h"
 #include "formula/variable_manager.h"
@@ -9,7 +9,7 @@
 namespace formula {
 
 /**
- * AST 求值器（访问者模式实现）
+ * AST evaluator (visitor pattern implementation)
  */
 class Evaluator : public AstVisitor {
 public:
@@ -17,10 +17,10 @@ public:
               std::shared_ptr<FunctionRegistry> funcRegistry,
               std::shared_ptr<ConstantRegistry> constRegistry);
 
-    // 求值入口
+    // Evaluation entry point
     Value evaluate(AstNode* node);
 
-    // 访问者方法实现
+    // Visitor method implementations
     Value visitBinaryOp(BinaryOpNode* node) override;
     Value visitUnaryOp(UnaryOpNode* node) override;
     Value visitTernaryOp(TernaryOpNode* node) override;
@@ -33,16 +33,16 @@ private:
     std::shared_ptr<FunctionRegistry> funcRegistry_;
     std::shared_ptr<ConstantRegistry> constRegistry_;
 
-    // 辅助函数：执行算术运算
+    // Helper function: perform arithmetic operations
     Value performArithmetic(Value left, Value right, TokenType op);
 
-    // 辅助函数：执行比较运算
+    // Helper function: perform comparison operations
     Value performComparison(Value left, Value right, TokenType op);
 
-    // 辅助函数：执行相等性比较
+    // Helper function: perform equality comparison
     Value performEquality(Value left, Value right, TokenType op);
 
-    // 辅助函数：执行逻辑运算
+    // Helper function: perform logical operations
     Value performLogical(Value left, Value right, TokenType op);
 };
 

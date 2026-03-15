@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "formula/token.h"
 #include "formula/value.h"
@@ -9,24 +9,24 @@
 namespace formula {
 
 /**
- * AST 节点类型枚举
+ * AST Node type enumeration
  */
 enum class NodeType {
-    BINARY_OP,      // 二元运算
-    UNARY_OP,       // 一元运算
-    TERNARY_OP,     // 三元运算
-    NUMBER,         // 数字字面量
-    VARIABLE,       // 变量
-    FUNCTION_CALL   // 函数调用
+    BINARY_OP,      // Binary operation
+    UNARY_OP,       // Unary operation
+    TERNARY_OP,     // Ternary operation
+    NUMBER,         // Numeric literal
+    VARIABLE,       // Variable
+    FUNCTION_CALL   // Function call
 };
 
 /**
- * AST 访问者接口（前向声明）
+ * AST Visitor interface (forward declaration)
  */
 class AstVisitor;
 
 /**
- * AST 节点基类
+ * AST Node base class
  */
 class AstNode {
 public:
@@ -34,7 +34,7 @@ public:
 
     NodeType getType() const { return type_; }
 
-    // 访问者模式接口 - 返回 Value 类型
+    // Visitor pattern interface - returns Value type
     virtual Value accept(AstVisitor* visitor) = 0;
 
 protected:
@@ -44,7 +44,7 @@ protected:
 };
 
 /**
- * AST 访问者接口
+ * AST Visitor interface
  */
 class AstVisitor {
 public:
@@ -59,7 +59,7 @@ public:
 };
 
 /**
- * 二元运算节点
+ * Binary operation node
  */
 class BinaryOpNode : public AstNode {
 public:
@@ -74,7 +74,7 @@ public:
 };
 
 /**
- * 一元运算节点
+ * Unary operation node
  */
 class UnaryOpNode : public AstNode {
 public:
@@ -88,7 +88,7 @@ public:
 };
 
 /**
- * 三元运算节点 (condition ? trueExpr : falseExpr)
+ * Ternary operation node (condition ? trueExpr : falseExpr)
  */
 class TernaryOpNode : public AstNode {
 public:
@@ -108,7 +108,7 @@ public:
 };
 
 /**
- * 数字节点
+ * Number node
  */
 class NumberNode : public AstNode {
 public:
@@ -121,7 +121,7 @@ public:
 };
 
 /**
- * 变量节点
+ * Variable node
  */
 class VariableNode : public AstNode {
 public:
@@ -134,7 +134,7 @@ public:
 };
 
 /**
- * 函数调用节点
+ * Function call node
  */
 class FunctionCallNode : public AstNode {
 public:

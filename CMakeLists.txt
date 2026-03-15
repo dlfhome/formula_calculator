@@ -1,22 +1,22 @@
 cmake_minimum_required(VERSION 3.14)
 project(formula_calculator VERSION 1.0.0 LANGUAGES CXX)
 
-# C++ 标准设置
+# C++ Standard Settings
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# 编译选项
+# Compiler Options
 if(MSVC)
     add_compile_options(/W4 /WX- /utf-8)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# 包含目录
+# Include Directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# 源文件列表
+# Source File List
 set(FORMULA_SOURCES
     src/value.cpp
     src/token.cpp
@@ -30,31 +30,31 @@ set(FORMULA_SOURCES
     src/formula_calculator.cpp
 )
 
-# 创建静态库
+# Create static library
 add_library(formula_calculator_static STATIC ${FORMULA_SOURCES})
 set_target_properties(formula_calculator_static PROPERTIES
     OUTPUT_NAME formula_calculator_static
 )
 
-# 创建动态库
+# Create shared library
 add_library(formula_calculator_shared SHARED ${FORMULA_SOURCES})
 set_target_properties(formula_calculator_shared PROPERTIES
     OUTPUT_NAME formula_calculator
     WINDOWS_EXPORT_ALL_SYMBOLS ON
 )
 
-# 线程支持
+# Thread support
 find_package(Threads REQUIRED)
 target_link_libraries(formula_calculator_static Threads::Threads)
 target_link_libraries(formula_calculator_shared Threads::Threads)
 
-# 数学库链接 (Linux 需要)
+# Math library link (needed for Linux)
 if(UNIX)
     target_link_libraries(formula_calculator_static m)
     target_link_libraries(formula_calculator_shared m)
 endif()
 
-# 安装规则
+# Installation rules
 install(TARGETS formula_calculator_static formula_calculator_shared
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -63,20 +63,20 @@ install(TARGETS formula_calculator_static formula_calculator_shared
 
 install(DIRECTORY include/formula DESTINATION include)
 
-# 测试配置
+# Test configuration
 option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
 
-# 示例配置
+# Example configuration
 option(BUILD_EXAMPLES "Build examples" ON)
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-# 打印配置信息
+# Print configuration info
 message(STATUS "")
 message(STATUS "=== Formula Calculator Configuration ===")
 message(STATUS "Version: ${PROJECT_VERSION}")

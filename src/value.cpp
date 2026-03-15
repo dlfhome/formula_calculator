@@ -1,4 +1,4 @@
-#include "formula/value.h"
+﻿#include "formula/value.h"
 #include <sstream>
 #include <iomanip>
 
@@ -119,28 +119,28 @@ double Value::asDouble() const {
 
 bool Value::getBool() const {
     if (type_ != ValueType::BOOL) {
-        throw ValueTypeException("值不是布尔类型");
+        throw ValueTypeException("Value is not a boolean type");
     }
     return boolValue_;
 }
 
 int64_t Value::getInt() const {
     if (type_ != ValueType::INT) {
-        throw ValueTypeException("值不是整数类型");
+        throw ValueTypeException("Value is not an integer type");
     }
     return intValue_;
 }
 
 double Value::getDouble() const {
     if (type_ != ValueType::DOUBLE) {
-        throw ValueTypeException("值不是浮点类型");
+        throw ValueTypeException("Value is not a floating-point type");
     }
     return doubleValue_;
 }
 
 bool Value::operator==(const Value& other) const {
     if (type_ != other.type_) {
-        // 类型不同时，转换为 double 比较
+        // For different types, convert to double for comparison
         return asDouble() == other.asDouble();
     }
     switch (type_) {

@@ -1,4 +1,4 @@
-#include "formula/constant_registry.h"
+﻿#include "formula/constant_registry.h"
 #include <mutex>
 
 namespace formula {
@@ -20,7 +20,7 @@ double ConstantRegistry::getConstant(const std::string& name) const {
     std::shared_lock<std::shared_mutex> lock(mutex_);
     auto it = constants_.find(name);
     if (it == constants_.end()) {
-        throw ConstantException("常量不存在: " + name);
+        throw ConstantException("Constant does not exist: " + name);
     }
     return it->second;
 }
@@ -51,9 +51,9 @@ std::vector<std::string> ConstantRegistry::getConstantNames() const {
 }
 
 void ConstantRegistry::registerDefaultConstants() {
-    // 圆周率
+    // Pi
     constants_["PI"] = 3.14159265358979323846;
-    // 自然对数的底
+    // Euler number (base of natural logarithm)
     constants_["E"] = 2.71828182845904523536;
 }
 

@@ -1,4 +1,4 @@
-#include "formula/formula_calculator.h"
+﻿#include "formula/formula_calculator.h"
 #include "formula/lexer.h"
 #include "formula/parser.h"
 #include "formula/evaluator.h"
@@ -26,15 +26,15 @@ bool FormulaCalculator::compile(const std::string& formula) {
     clear();
 
     try {
-        // 词法分析
+        // Lexical analysis
         Lexer lexer(formula);
         auto tokens = lexer.tokenize();
 
-        // 语法分析
+        // Syntax analysis
         parser_ = std::make_unique<Parser>(tokens, funcRegistry_);
         ast_ = parser_->parse();
 
-        // 创建求值器
+        // Create evaluator
         evaluator_ = std::make_unique<Evaluator>(varManager_, funcRegistry_, constRegistry_);
 
         isCompiled_ = true;
@@ -47,7 +47,7 @@ bool FormulaCalculator::compile(const std::string& formula) {
 
 Value FormulaCalculator::evaluate() {
     if (!isCompiled_) {
-        throw std::runtime_error("公式未编译");
+        throw std::runtime_error("Formula not compiled");
     }
 
     try {
@@ -75,7 +75,7 @@ bool FormulaCalculator::hasVariable(const std::string& name) const {
 }
 
 bool FormulaCalculator::registerFunction(const std::string& name, FunctionPtr func, int arity) {
-    // 包装 Value 函数为 FunctionInfo
+    // Wrap Value function as FunctionInfo
     auto wrapper = [func](const std::vector<double>& args) -> double {
         std::vector<Value> valueArgs;
         valueArgs.reserve(args.size());

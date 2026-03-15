@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "formula/token.h"
 #include <string>
@@ -7,14 +7,14 @@
 namespace formula {
 
 /**
- * 词法分析器
- * 将公式字符串转换为 Token 序列
+ * Lexer
+ * Converts formula string to token sequence
  */
 class Lexer {
 public:
     explicit Lexer(const std::string& input);
 
-    // 执行词法分析，返回 Token 列表
+    // Perform lexical analysis, return token list
     std::vector<Token> tokenize();
 
 private:

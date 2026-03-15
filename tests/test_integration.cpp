@@ -1,7 +1,7 @@
-/**
- * 集成测试
- * 测试复杂表达式的组合使用
- * 验证各功能模块协同工作
+﻿/**
+ * Integration Tests
+ * Test complex expression combinations
+ * Verify coordination between functional modules
  */
 
 #include <iostream>
@@ -13,13 +13,13 @@
 #include <map>
 #include <chrono>
 
-// 测试辅助宏
+// Test helper macros
 #define TEST(name) void test_##name()
 #define RUN_TEST(name) \
     do { \
-        std::cout << "  运行 " << #name << "... "; \
+        std::cout << "  Running " << #name << "... "; \
         test_##name(); \
-        std::cout << "通过" << std::endl; \
+        std::cout << "Passed" << std::endl; \
     } while(0)
 #define ASSERT_TRUE(expr) assert(expr)
 #define ASSERT_FALSE(expr) assert(!(expr))
@@ -35,13 +35,13 @@
 
 namespace formula {
 
-// 模拟公式计算器类（待实际实现时替换为真实类）
+// Mock Formula Calculator class (replace with real class when implemented)
 class FormulaCalculator {
 public:
     FormulaCalculator() : lastError_(""), isCompiled_(false) {}
 
     bool compile(const std::string& formula) {
-        // 模拟编译过程
+        // Mock compilation process
         formula_ = formula;
         isCompiled_ = true;
         lastError_ = "";
@@ -50,9 +50,9 @@ public:
 
     double evaluate() {
         if (!isCompiled_) {
-            throw std::runtime_error("公式未编译");
+            throw std::runtime_error("Formula not compiled");
         }
-        // 模拟求值（实际实现中应解析并计算表达式）
+        // Mock evaluation (actual implementation should parse and evaluate expression)
         return 0.0;
     }
 
@@ -65,7 +65,7 @@ public:
         if (it != variables_.end()) {
             return it->second;
         }
-        throw std::runtime_error("变量不存在: " + name);
+        throw std::runtime_error("Variable does not exist: " + name);
     }
 
     bool hasVariable(const std::string& name) const {
@@ -93,7 +93,7 @@ private:
     bool isCompiled_;
 };
 
-// 辅助函数
+// Helper functions
 double power(double base, double exp) { return std::pow(base, exp); }
 bool toBool(double value) { return value != 0.0; }
 
@@ -101,48 +101,48 @@ bool toBool(double value) { return value != 0.0; }
 
 using namespace formula;
 
-// ==================== 测试用例 ====================
+// ==================== Test Cases ====================
 
-// 基本算术与比较组合
+// Basic arithmetic and comparison combination
 TEST(arithmetic_comparison_combo) {
     // (a + b) > (c * d)
     double a = 5, b = 3, c = 2, d = 3;
     ASSERT_TRUE((a + b) > (c * d));  // 8 > 6 = true
 
-    // a^2 + b^2 == c^2（勾股定理检查）
+    // a^2 + b^2 == c^2 (Pythagorean theorem check)
     a = 3; b = 4; c = 5;
     ASSERT_TRUE(power(a, 2) + power(b, 2) == power(c, 2));  // 9 + 16 = 25
 
-    // 平均值计算并比较
+    // Average calculation and comparison
     double avg = (10 + 20 + 30) / 3.0;
     ASSERT_TRUE(avg >= 19 && avg <= 21);
 }
 
-// 比较与逻辑组合
+// Comparison and logic combination
 TEST(comparison_logical_combo) {
-    // 范围检查：min <= x <= max
+    // Range check: min <= x <= max
     double x = 50, min = 0, max = 100;
     ASSERT_TRUE(x >= min && x <= max);
 
     x = -10;
     ASSERT_FALSE(x >= min && x <= max);
 
-    // 多条件检查
+    // Multi-condition check
     double age = 25, income = 50000;
     ASSERT_TRUE(age >= 18 && age <= 65 && income > 30000);
 
-    // 或条件检查
+    // OR condition check
     double score1 = 95, score2 = 75;
     ASSERT_TRUE(score1 > 90 || score2 > 80);  // 95 > 90 为 true
 
-    // 复杂条件：(a > b && c > d) || (a == b && c == d)
+    // Complex condition: (a > b && c > d) || (a == b && c == d)
     double a = 5, b = 3, c = 7, d = 4;
     ASSERT_TRUE((a > b && c > d) || (a == b && c == d));
 }
 
-// 三元运算符与比较逻辑组合
+// Ternary operator with comparison and logic combination
 TEST(ternary_comparison_logical_combo) {
-    // 成绩等级判断
+    // Grade level judgment
     auto getGrade = [](double score) -> int {
         return score >= 90 ? 1 :  // A
                score >= 80 ? 2 :  // B
@@ -156,7 +156,7 @@ TEST(ternary_comparison_logical_combo) {
     ASSERT_EQ(getGrade(65), 4);  // D
     ASSERT_EQ(getGrade(55), 5);  // F
 
-    // 根据条件选择不同计算方式
+    // Select different calculation based on condition
     double a = 5, b = 3;
     bool useMax = true;
     double result = useMax ? (a > b ? a : b) : (a < b ? a : b);
@@ -167,27 +167,27 @@ TEST(ternary_comparison_logical_combo) {
     ASSERT_EQ(result, 3);  // min(5, 3) = 3
 }
 
-// 数学函数与逻辑组合
+// Math functions with logic combination
 TEST(math_logical_combo) {
-    // 绝对值与比较
+    // Absolute value and comparison
     auto abs = [](double x) { return x >= 0 ? x : -x; };
     ASSERT_TRUE(abs(-5) == abs(5));
     ASSERT_TRUE(abs(-10) > abs(3));
 
-    // 平方根与有效性检查
+    // Square root and validity check
     double x = 16;
     double sqrt_x = x >= 0 ? std::sqrt(x) : 0;
     ASSERT_EQ(sqrt_x, 4);
 
-    // 幂运算与范围检查
+    // Power operation and range check
     double base = 2, exp = 10;
     double pow_result = power(base, exp);
     ASSERT_TRUE(pow_result > 1000 && pow_result < 2000);  // 1024
 }
 
-// 复杂嵌套表达式
+// Complex nested expressions
 TEST(complex_nested_expressions) {
-    // 计算税费：收入在范围内按不同税率
+    // Calculate tax: different tax rates based on income range
     auto calculateTax = [](double income) {
         double tax;
         if (income <= 5000) {
@@ -200,7 +200,7 @@ TEST(complex_nested_expressions) {
         return tax;
     };
 
-    // 用三元表达式实现
+    // Implement with ternary expression
     auto calculateTaxTernary = [](double income) {
         return income <= 5000 ? income * 0.1 :
                income <= 10000 ? 500 + (income - 5000) * 0.2 :
@@ -211,33 +211,33 @@ TEST(complex_nested_expressions) {
     ASSERT_NEAR(calculateTax(7000), calculateTaxTernary(7000), 1e-10);
     ASSERT_NEAR(calculateTax(15000), calculateTaxTernary(15000), 1e-10);
 
-    // 验证具体值
+    // Verify specific values
     ASSERT_NEAR(calculateTaxTernary(3000), 300, 1e-10);
     ASSERT_NEAR(calculateTaxTernary(7000), 900, 1e-10);
     ASSERT_NEAR(calculateTaxTernary(15000), 3000, 1e-10);
 }
 
-// 变量与表达式组合
+// Variable and expression combination
 TEST(variable_expression_combo) {
     FormulaCalculator calc;
 
-    // 设置变量
+    // Set variables
     calc.setVariable("x", 10);
     calc.setVariable("y", 20);
     calc.setVariable("z", 30);
 
-    // 验证变量存在
+    // Verify variables exist
     ASSERT_TRUE(calc.hasVariable("x"));
     ASSERT_TRUE(calc.hasVariable("y"));
     ASSERT_TRUE(calc.hasVariable("z"));
     ASSERT_FALSE(calc.hasVariable("w"));
 
-    // 验证变量值
+    // Verify variable values
     ASSERT_EQ(calc.getVariable("x"), 10);
     ASSERT_EQ(calc.getVariable("y"), 20);
     ASSERT_EQ(calc.getVariable("z"), 30);
 
-    // 模拟使用变量的表达式
+    // Simulate expressions using variables
     double x = calc.getVariable("x");
     double y = calc.getVariable("y");
     double z = calc.getVariable("z");
@@ -252,49 +252,49 @@ TEST(variable_expression_combo) {
     ASSERT_TRUE(x > y || y < z);
 }
 
-// 错误处理测试
+// Error handling test
 TEST(error_handling) {
     FormulaCalculator calc;
 
-    // 未编译时求值应抛出异常
+    // Evaluation without compilation should throw exception
     ASSERT_THROW(calc.evaluate(), std::runtime_error);
 
-    // 获取不存在的变量应抛出异常
+    // Getting non-existent variable should throw exception
     ASSERT_THROW(calc.getVariable("nonexistent"), std::runtime_error);
 
-    // 编译后求值不应抛出异常
+    // Evaluation after compilation should not throw exception
     ASSERT_TRUE(calc.compile("1 + 2"));
     ASSERT_TRUE(calc.isCompiled());
 }
 
-// 边界条件测试
+// Boundary condition test
 TEST(boundary_conditions) {
-    // 极大值运算
+    // Large value operations
     double max = 1e308;
     ASSERT_TRUE(max * 0.5 < max);
     ASSERT_TRUE(max > 0);
 
-    // 极小值运算
+    // Small value operations
     double min = -1e308;
     ASSERT_TRUE(min < 0);
     ASSERT_TRUE(min < max);
 
-    // 零值运算
+    // Zero value operations
     ASSERT_EQ(0.0 + 0.0, 0.0);
     ASSERT_EQ(0.0 * 100, 0.0);
     ASSERT_TRUE(0.0 == 0.0);
     ASSERT_FALSE(0.0 != 0.0);
 
-    // 除零检查（应妥善处理）
+    // Division by zero check (should be handled properly)
     double x = 10, y = 0;
     bool safeToDivide = y != 0;
     double result = safeToDivide ? x / y : 0;
     ASSERT_EQ(result, 0);
 }
 
-// 实际应用场景测试
+// Real-world scenario test
 TEST(real_world_scenarios) {
-    // 场景1：折扣计算
+    // Scenario 1: Discount calculation
     auto calculateDiscount = [](double price, bool isVIP, int quantity) {
         double discount = isVIP ? 0.8 : 0.95;
         double qtyDiscount = quantity >= 10 ? 0.9 : 1.0;
@@ -306,7 +306,7 @@ TEST(real_world_scenarios) {
     // 普通用户买10件：100 * 10 * 0.95 * 0.9 = 855
     ASSERT_NEAR(calculateDiscount(100, false, 10), 855, 1e-10);
 
-    // 场景2：BMI计算和分类
+    // Scenario 2: BMI calculation and classification
     auto calculateBMI = [](double weight, double height) {
         return weight / (height * height);
     };
@@ -321,7 +321,7 @@ TEST(real_world_scenarios) {
     ASSERT_TRUE(bmi >= 18.5 && bmi < 24);
     ASSERT_EQ(getBMICategory(bmi), 2);  // 正常
 
-    // 场景3：贷款资格检查
+    // Scenario 3: Loan eligibility check
     auto checkLoanEligibility = [](double income, double debt, int creditScore) {
         double debtRatio = debt / income;
         return income > 5000 &&
@@ -330,14 +330,14 @@ TEST(real_world_scenarios) {
     };
 
     ASSERT_TRUE(checkLoanEligibility(8000, 2000, 700));
-    ASSERT_FALSE(checkLoanEligibility(4000, 1000, 700));  // 收入不足
-    ASSERT_FALSE(checkLoanEligibility(8000, 4000, 700));  // 负债过高
-    ASSERT_FALSE(checkLoanEligibility(8000, 2000, 500));  // 信用分不足
+    ASSERT_FALSE(checkLoanEligibility(4000, 1000, 700));  // Insufficient income
+    ASSERT_FALSE(checkLoanEligibility(8000, 4000, 700));  // Too much debt
+    ASSERT_FALSE(checkLoanEligibility(8000, 2000, 500));  // Low credit score
 }
 
-// 性能测试（简单验证）
+// Performance test (simple verification)
 TEST(performance_basic) {
-    // 重复计算同一表达式
+    // Repeatedly calculate same expression
     auto start = std::chrono::high_resolution_clock::now();
 
     double result = 0;
@@ -348,14 +348,14 @@ TEST(performance_basic) {
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-    // 简单验证结果不为0且计算在合理时间内完成
+    // Verify result is not 0 and calculation completes in reasonable time
     ASSERT_TRUE(result > 0);
-    ASSERT_TRUE(duration.count() < 1000);  // 应该在1秒内完成
+    ASSERT_TRUE(duration.count() < 1000);  // Should complete within 1 second
 }
 
-// 复杂逻辑组合测试
+// Complex logic combination test
 TEST(complex_logic_combinations) {
-    // 验证各种逻辑组合
+    // Verify various logic combinations
     for (bool a : {true, false}) {
         for (bool b : {true, false}) {
             for (bool c : {true, false}) {
@@ -373,9 +373,9 @@ TEST(complex_logic_combinations) {
     }
 }
 
-// 类型转换和兼容性测试
+// Type conversion and compatibility test
 TEST(type_compatibility) {
-    // int 和 double 混合运算
+    // int and double mixed operations
     int i = 5;
     double d = 2.5;
     ASSERT_NEAR(i + d, 7.5, 1e-10);
@@ -383,55 +383,55 @@ TEST(type_compatibility) {
     ASSERT_EQ(i / 2, 2);  // 整数除法
     ASSERT_NEAR(i / 2.0, 2.5, 1e-10);  // 浮点除法
 
-    // bool 在数值上下文中的转换
+    // bool conversion in numeric context
     bool flag = true;
     ASSERT_EQ(flag + 0, 1);
     ASSERT_EQ((!flag) + 0, 0);
 
-    // 数值在布尔上下文中的转换
+    // Numeric conversion in boolean context
     ASSERT_TRUE(5 && true);
     ASSERT_FALSE(0 && true);
     ASSERT_TRUE(5 || false);
     ASSERT_FALSE(0 || false);
 }
 
-// ==================== 主函数 ====================
+// ==================== Main Function ====================
 
 int main() {
     std::cout << "========================================" << std::endl;
-    std::cout << "集成测试套件" << std::endl;
+    std::cout << "Integration Test Suite" << std::endl;
     std::cout << "========================================" << std::endl;
     std::cout << std::endl;
 
-    std::cout << "【基本组合测试】" << std::endl;
+    std::cout << "[Basic Combination Tests]" << std::endl;
     RUN_TEST(arithmetic_comparison_combo);
     RUN_TEST(comparison_logical_combo);
     RUN_TEST(ternary_comparison_logical_combo);
     std::cout << std::endl;
 
-    std::cout << "【复杂表达式测试】" << std::endl;
+    std::cout << "[Complex Expression Tests]" << std::endl;
     RUN_TEST(math_logical_combo);
     RUN_TEST(complex_nested_expressions);
     RUN_TEST(variable_expression_combo);
     std::cout << std::endl;
 
-    std::cout << "【边界和错误处理测试】" << std::endl;
+    std::cout << "[Boundary and Error Handling Tests]" << std::endl;
     RUN_TEST(error_handling);
     RUN_TEST(boundary_conditions);
     std::cout << std::endl;
 
-    std::cout << "【实际应用场景测试】" << std::endl;
+    std::cout << "[Real-world Scenario Tests]" << std::endl;
     RUN_TEST(real_world_scenarios);
     RUN_TEST(performance_basic);
     std::cout << std::endl;
 
-    std::cout << "【高级功能测试】" << std::endl;
+    std::cout << "[Advanced Feature Tests]" << std::endl;
     RUN_TEST(complex_logic_combinations);
     RUN_TEST(type_compatibility);
     std::cout << std::endl;
 
     std::cout << "========================================" << std::endl;
-    std::cout << "所有测试通过！" << std::endl;
+    std::cout << "All tests passed!" << std::endl;
     std::cout << "========================================" << std::endl;
 
     return 0;

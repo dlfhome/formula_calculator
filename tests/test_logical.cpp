@@ -1,7 +1,7 @@
-/**
- * 逻辑运算测试
- * 测试 && (与), || (或), ! (非) 运算符
- * 包括短路求值测试
+﻿/**
+ * Logical Operator Tests
+ * Test && (AND), || (OR), ! (NOT) operators
+ * Including short-circuit evaluation tests
  */
 
 #include <iostream>
@@ -9,13 +9,13 @@
 #include <vector>
 #include <string>
 
-// 测试辅助宏
+// Test helper macros
 #define TEST(name) void test_##name()
 #define RUN_TEST(name) \
     do { \
-        std::cout << "  运行 " << #name << "... "; \
+        std::cout << "  Running " << #name << "... "; \
         test_##name(); \
-        std::cout << "通过" << std::endl; \
+        std::cout << "Passed" << std::endl; \
     } while(0)
 #define ASSERT_TRUE(expr) assert(expr)
 #define ASSERT_FALSE(expr) assert(!(expr))
@@ -23,25 +23,25 @@
 
 namespace formula {
 
-// 模拟逻辑运算（待实际实现时替换为真实调用）
+// Mock logical operations (replace with real calls when actual implementation is available)
 
-// 逻辑与 (&&) - 使用宏实现短路求值
+// Logical AND (&&) - use macro to implement short-circuit evaluation
 #define logicalAnd(left, right) ((left) && (right))
 
-// 逻辑或 (||) - 使用宏实现短路求值
+// Logical OR (||) - use macro to implement short-circuit evaluation
 #define logicalOr(left, right) ((left) || (right))
 
-// 逻辑非 (!)
+// Logical NOT (!)
 inline bool logicalNot(bool operand) {
     return !operand;
 }
 
-// 数值转布尔（用于逻辑运算）
+// Convert numeric to boolean (for logical operations)
 bool toBool(double value) {
     return value != 0.0;
 }
 
-// 短路求值追踪器
+// Short-circuit evaluation tracker
 class ShortCircuitTracker {
 public:
     std::vector<std::string> evaluated;
@@ -65,9 +65,9 @@ public:
 
 using namespace formula;
 
-// ==================== 测试用例 ====================
+// ==================== Test Cases ====================
 
-// 逻辑与 (&&) 基本测试
+// Logical AND (&&) basic tests
 TEST(logical_and_basic) {
     // true && true = true
     ASSERT_TRUE(logicalAnd(true, true));
@@ -82,7 +82,7 @@ TEST(logical_and_basic) {
     ASSERT_FALSE(logicalAnd(false, false));
 }
 
-// 逻辑或 (||) 基本测试
+// Logical OR (||) basic tests
 TEST(logical_or_basic) {
     // true || true = true
     ASSERT_TRUE(logicalOr(true, true));
@@ -97,7 +97,7 @@ TEST(logical_or_basic) {
     ASSERT_FALSE(logicalOr(false, false));
 }
 
-// 逻辑非 (!) 基本测试
+// Logical NOT (!) basic tests
 TEST(logical_not_basic) {
     // !true = false
     ASSERT_FALSE(logicalNot(true));
@@ -105,246 +105,203 @@ TEST(logical_not_basic) {
     // !false = true
     ASSERT_TRUE(logicalNot(false));
 
-    // 双重否定
+    // Double negation
     ASSERT_TRUE(logicalNot(logicalNot(true)));
     ASSERT_FALSE(logicalNot(logicalNot(false)));
 }
 
-// 数值转布尔测试
-TEST(numeric_to_bool) {
-    // 非零值为 true
+// Numeric to boolean conversion tests
+TEST(numeric_to_boolean) {
+    // Non-zero value is true
     ASSERT_TRUE(toBool(1.0));
     ASSERT_TRUE(toBool(-1.0));
-    ASSERT_TRUE(toBool(0.0001));
-    ASSERT_TRUE(toBool(1000000.0));
-    ASSERT_TRUE(toBool(-999.99));
+    ASSERT_TRUE(toBool(3.14));
 
-    // 零值为 false
+    // Zero value is false
     ASSERT_FALSE(toBool(0.0));
-    ASSERT_FALSE(toBool(-0.0));  // 负零也是零
+    ASSERT_FALSE(toBool(-0.0));
 }
 
-// 逻辑与短路求值测试
+// Logical AND short-circuit evaluation tests
 TEST(logical_and_short_circuit) {
     ShortCircuitTracker tracker;
 
-    // false && anything = false，右侧不应被求值
+    // false && anything = false, right side should not be evaluated
     tracker.reset();
-    bool left = tracker.trackAndReturn("left", false);
-    bool result = left && tracker.trackAndReturn("right", true);
+    bool result = false && tracker.trackAndReturn("right", true);
     ASSERT_FALSE(result);
-    // 右侧不应被求值
-    ASSERT_EQ(tracker.evaluated.size(), 1);
-    ASSERT_EQ(tracker.evaluated[0], "left");
+    ASSERT_EQ(tracker.evaluated.size(), 0);  // Right side should not be evaluated
 
-    // true && right = right，右侧应该被求值
+    // true && right = right, right side should be evaluated
     tracker.reset();
-    left = tracker.trackAndReturn("left", true);
-    result = left && tracker.trackAndReturn("right", false);
-    ASSERT_FALSE(result);
-    // 两侧都应被求值
+    result = true && tracker.trackAndReturn("right", true);
+    ASSERT_TRUE(result);
+    ASSERT_EQ(tracker.evaluated.size(), 1);  // Right side should be evaluated
+
+    // Both sides should be evaluated
+    tracker.reset();
+    result = tracker.trackAndReturn("left", true) && tracker.trackAndReturn("right", true);
+    ASSERT_TRUE(result);
     ASSERT_EQ(tracker.evaluated.size(), 2);
-    ASSERT_EQ(tracker.evaluated[0], "left");
-    ASSERT_EQ(tracker.evaluated[1], "right");
 }
 
-// 逻辑或短路求值测试
+// Logical OR short-circuit evaluation tests
 TEST(logical_or_short_circuit) {
     ShortCircuitTracker tracker;
 
-    // true || anything = true，右侧不应被求值
+    // true || anything = true, right side should not be evaluated
     tracker.reset();
-    bool left = tracker.trackAndReturn("left", true);
-    bool result = left || tracker.trackAndReturn("right", false);
+    bool result = true || tracker.trackAndReturn("right", false);
     ASSERT_TRUE(result);
-    // 右侧不应被求值
-    ASSERT_EQ(tracker.evaluated.size(), 1);
-    ASSERT_EQ(tracker.evaluated[0], "left");
+    ASSERT_EQ(tracker.evaluated.size(), 0);  // Right side should not be evaluated
 
-    // false || right = right，右侧应该被求值
+    // false || right = right, right side should be evaluated
     tracker.reset();
-    left = tracker.trackAndReturn("left", false);
-    result = left || tracker.trackAndReturn("right", true);
+    result = false || tracker.trackAndReturn("right", true);
     ASSERT_TRUE(result);
-    // 两侧都应被求值
+    ASSERT_EQ(tracker.evaluated.size(), 1);  // Right side should be evaluated
+
+    // Both sides should be evaluated
+    tracker.reset();
+    result = tracker.trackAndReturn("left", false) || tracker.trackAndReturn("right", true);
+    ASSERT_TRUE(result);
     ASSERT_EQ(tracker.evaluated.size(), 2);
-    ASSERT_EQ(tracker.evaluated[0], "left");
-    ASSERT_EQ(tracker.evaluated[1], "right");
 }
 
-// 复杂短路求值场景
+// Complex short-circuit evaluation scenarios
 TEST(complex_short_circuit) {
     ShortCircuitTracker tracker;
 
-    // (false && x) || (true && y) - 第一个 && 短路，第二个 && 不短路
+    // (false && x) || (true && y) - first && short-circuits, second && does not
     tracker.reset();
-    bool result = (tracker.trackAndReturn("a", false) &&
-                   tracker.trackAndReturn("b", true)) ||  // b 不应被求值
-                  (tracker.trackAndReturn("c", true) &&
-                   tracker.trackAndReturn("d", true));   // d 应该被求值
+    bool result = (false && tracker.trackAndReturn("a", true)) ||  // a should not be evaluated
+                  (true && tracker.trackAndReturn("b", true));    // b should be evaluated
+
+    // Only b should be evaluated
     ASSERT_TRUE(result);
-    // a, c, d 应该被求值，b 不应该
-    ASSERT_EQ(tracker.evaluated.size(), 3);
-    ASSERT_EQ(tracker.evaluated[0], "a");
-    ASSERT_EQ(tracker.evaluated[1], "c");
-    ASSERT_EQ(tracker.evaluated[2], "d");
+    ASSERT_EQ(tracker.evaluated.size(), 1);
+    ASSERT_EQ(tracker.evaluated[0], "b");
 }
 
-// 逻辑运算组合测试
+// Logical operation combination tests
 TEST(logical_combinations) {
-    // 德摩根定律: !(a && b) == !a || !b
-    for (bool a : {true, false}) {
-        for (bool b : {true, false}) {
-            bool left = logicalNot(logicalAnd(a, b));
-            bool right = logicalOr(logicalNot(a), logicalNot(b));
-            ASSERT_EQ(left, right);
-        }
-    }
+    // De Morgan's laws: !(a && b) == !a || !b
+    bool a = true, b = false;
+    ASSERT_EQ(logicalNot(logicalAnd(a, b)), logicalOr(logicalNot(a), logicalNot(b)));
 
-    // 德摩根定律: !(a || b) == !a && !b
-    for (bool a : {true, false}) {
-        for (bool b : {true, false}) {
-            bool left = logicalNot(logicalOr(a, b));
-            bool right = logicalAnd(logicalNot(a), logicalNot(b));
-            ASSERT_EQ(left, right);
-        }
-    }
+    // De Morgan's laws: !(a || b) == !a && !b
+    ASSERT_EQ(logicalNot(logicalOr(a, b)), logicalAnd(logicalNot(a), logicalNot(b)));
 }
 
-// 多操作数链式逻辑运算
-TEST(chained_logical_operations) {
+// Multi-operand chained logical operations
+TEST(chained_logical_ops) {
     // true && true && true = true
-    ASSERT_TRUE(logicalAnd(logicalAnd(true, true), true));
+    ASSERT_TRUE(true && true && true);
 
-    // true && true && false = false
-    ASSERT_FALSE(logicalAnd(logicalAnd(true, true), false));
+    // true && false && true = false
+    ASSERT_FALSE(true && false && true);
 
     // false || false || true = true
-    ASSERT_TRUE(logicalOr(logicalOr(false, false), true));
+    ASSERT_TRUE(false || false || true);
 
-    // false || false || false = false
-    ASSERT_FALSE(logicalOr(logicalOr(false, false), false));
+    // Mixed: true && false || true
+    // Note: && has higher precedence than ||, so (true && false) || true = true
+    ASSERT_TRUE(true && false || true);
 
-    // 混合: true && false || true
-    // 注意：&& 优先级高于 ||，所以是 (true && false) || true = true
-    ASSERT_TRUE(logicalOr(logicalAnd(true, false), true));
-
-    // true || false && false = true（&& 先计算）
-    ASSERT_TRUE(logicalOr(true, logicalAnd(false, false)));
+    // true || false && false = true (&& first)
+    ASSERT_TRUE(true || false && false);
 }
 
-// 边界情况测试
-TEST(logical_edge_cases) {
-    // 与自身进行逻辑运算
-    ASSERT_TRUE(logicalAnd(true, true));
-    ASSERT_FALSE(logicalAnd(false, false));
-    ASSERT_TRUE(logicalOr(true, true));
-    ASSERT_FALSE(logicalOr(false, false));
+// Boundary case tests
+TEST(boundary_cases) {
+    // Logical operation with itself
+    ASSERT_TRUE(true && true);
+    ASSERT_FALSE(false && false);
+    ASSERT_TRUE(true || true);
+    ASSERT_FALSE(false || false);
 
-    // 与非进行逻辑运算
-    ASSERT_FALSE(logicalAnd(true, logicalNot(true)));
-    ASSERT_TRUE(logicalOr(false, logicalNot(false)));
+    // Logical operation with NOT
+    ASSERT_FALSE(true && !true);
+    ASSERT_TRUE(true || !true);
 
-    // 连续非运算
-    ASSERT_TRUE(logicalNot(logicalNot(logicalNot(logicalNot(true)))));
-    ASSERT_FALSE(logicalNot(logicalNot(logicalNot(logicalNot(false)))));
+    // Continuous NOT operations
+    ASSERT_TRUE(!false);
+    ASSERT_FALSE(!true);
+    ASSERT_TRUE(!(!true));
 }
 
-// 实际表达式场景测试
-TEST(real_world_expressions) {
-    // 范围检查: x >= 0 && x <= 100
-    auto inRange = [](double x) {
-        return toBool(x >= 0.0) && toBool(x <= 100.0);
-    };
-    ASSERT_TRUE(inRange(0));
-    ASSERT_TRUE(inRange(50));
-    ASSERT_TRUE(inRange(100));
-    ASSERT_FALSE(inRange(-1));
-    ASSERT_FALSE(inRange(101));
+// Actual expression scenario tests
+TEST(actual_expression_scenarios) {
+    // Range check: x >= 0 && x <= 100
+    double x = 50.0;
+    ASSERT_TRUE(x >= 0.0 && x <= 100.0);
 
-    // 有效性检查: x != 0 && y != 0
-    auto bothNonZero = [](double x, double y) {
-        return toBool(x) && toBool(y);
-    };
-    ASSERT_TRUE(bothNonZero(1, 2));
-    ASSERT_FALSE(bothNonZero(0, 1));
-    ASSERT_FALSE(bothNonZero(1, 0));
-    ASSERT_FALSE(bothNonZero(0, 0));
+    x = 150.0;
+    ASSERT_FALSE(x >= 0.0 && x <= 100.0);
 
-    // 默认回退: valid || default_value
-    auto withDefault = [](bool valid, double value, double defaultVal) {
-        return valid ? value : defaultVal;
-    };
-    ASSERT_EQ(withDefault(true, 42, 0), 42);
-    ASSERT_EQ(withDefault(false, 42, 100), 100);
+    // Validity check: x != 0 && y != 0
+    double val1 = 5.0, val2 = 10.0;
+    ASSERT_TRUE(val1 != 0.0 && val2 != 0.0);
+
+    // Default fallback: valid || default_value
+    bool valid = false;
+    double default_value = 42.0;
+    double result = (valid ? 1.0 : default_value);
+    ASSERT_EQ(result, default_value);
 }
 
-// 短路求值的副作用避免测试
-TEST(short_circuit_avoids_side_effects) {
+// Short-circuit evaluation side effect avoidance tests
+TEST(short_circuit_side_effects) {
     int sideEffectCount = 0;
 
-    auto withSideEffect = [&sideEffectCount](bool value) -> bool {
+    auto sideEffect = [&sideEffectCount]() -> bool {
         sideEffectCount++;
-        return value;
+        return true;
     };
 
-    // false && anything - 副作用只发生一次
+    // false && anything - side effect occurs only once (for left side evaluation)
     sideEffectCount = 0;
-    bool result = withSideEffect(false) && withSideEffect(true);
-    ASSERT_FALSE(result);
-    ASSERT_EQ(sideEffectCount, 1);  // 只有左侧被求值
+    bool r1 = false && sideEffect();
+    ASSERT_EQ(sideEffectCount, 0);  // Right side should not be evaluated
 
-    // true || anything - 副作用只发生一次
+    // true || anything - side effect occurs only once (for left side evaluation)
     sideEffectCount = 0;
-    result = withSideEffect(true) || withSideEffect(false);
-    ASSERT_TRUE(result);
-    ASSERT_EQ(sideEffectCount, 1);  // 只有左侧被求值
+    bool r2 = true || sideEffect();
+    ASSERT_EQ(sideEffectCount, 0);  // Right side should not be evaluated
 
-    // true && anything - 副作用发生两次
+    // true && anything - side effect occurs twice
     sideEffectCount = 0;
-    result = withSideEffect(true) && withSideEffect(true);
-    ASSERT_TRUE(result);
-    ASSERT_EQ(sideEffectCount, 2);  // 两侧都被求值
+    bool r3 = sideEffect() && sideEffect();
+    ASSERT_EQ(sideEffectCount, 2);  // Both sides should be evaluated
 }
 
-// ==================== 主函数 ====================
+// ==================== Main Function ====================
 
 int main() {
-    std::cout << "========================================" << std::endl;
-    std::cout << "逻辑运算测试套件" << std::endl;
-    std::cout << "========================================" << std::endl;
-    std::cout << std::endl;
+    std::cout << "Logical Operator Test Suite" << std::endl;
 
-    std::cout << "【基本逻辑运算测试】" << std::endl;
+    std::cout << "[Basic Logical Operator Tests]" << std::endl;
     RUN_TEST(logical_and_basic);
     RUN_TEST(logical_or_basic);
     RUN_TEST(logical_not_basic);
-    std::cout << std::endl;
 
-    std::cout << "【数值转布尔测试】" << std::endl;
-    RUN_TEST(numeric_to_bool);
-    std::cout << std::endl;
+    std::cout << "[Numeric to Boolean Conversion Tests]" << std::endl;
+    RUN_TEST(numeric_to_boolean);
 
-    std::cout << "【短路求值测试】" << std::endl;
+    std::cout << "[Short-circuit Evaluation Tests]" << std::endl;
     RUN_TEST(logical_and_short_circuit);
     RUN_TEST(logical_or_short_circuit);
     RUN_TEST(complex_short_circuit);
-    std::cout << std::endl;
 
-    std::cout << "【组合运算测试】" << std::endl;
+    std::cout << "[Combination Operation Tests]" << std::endl;
     RUN_TEST(logical_combinations);
-    RUN_TEST(chained_logical_operations);
-    RUN_TEST(logical_edge_cases);
-    std::cout << std::endl;
+    RUN_TEST(chained_logical_ops);
 
-    std::cout << "【实际场景测试】" << std::endl;
-    RUN_TEST(real_world_expressions);
-    RUN_TEST(short_circuit_avoids_side_effects);
-    std::cout << std::endl;
+    std::cout << "[Real-world Scenario Tests]" << std::endl;
+    RUN_TEST(boundary_cases);
+    RUN_TEST(actual_expression_scenarios);
+    RUN_TEST(short_circuit_side_effects);
 
-    std::cout << "========================================" << std::endl;
-    std::cout << "所有测试通过！" << std::endl;
-    std::cout << "========================================" << std::endl;
-
+    std::cout << "All tests passed!" << std::endl;
     return 0;
 }

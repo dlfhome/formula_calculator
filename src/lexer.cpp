@@ -1,4 +1,4 @@
-#include "formula/lexer.h"
+﻿#include "formula/lexer.h"
 #include <cctype>
 #include <stdexcept>
 
@@ -43,7 +43,7 @@ Token Lexer::readNumber() {
         value += advance();
     }
 
-    // 处理科学计数法
+    // Handle scientific notation
     if (!isAtEnd() && (peek() == 'e' || peek() == 'E')) {
         value += advance();
         if (!isAtEnd() && (peek() == '+' || peek() == '-')) {
@@ -85,7 +85,7 @@ Token Lexer::readOperator() {
         case '?': return Token(TokenType::QUESTION, "?", startPos);
         case ':': return Token(TokenType::COLON, ":", startPos);
 
-        // 处理多字符运算符
+        // Handle multi-character operators
         case '!':
             if (match('=')) {
                 return Token(TokenType::NOT_EQUAL, "!=", startPos);
@@ -96,7 +96,7 @@ Token Lexer::readOperator() {
             if (match('=')) {
                 return Token(TokenType::EQUAL, "==", startPos);
             }
-            throw std::runtime_error("未知的字符: = (是否想使用 == ?)");
+            throw std::runtime_error("Unknown character: = (did you mean == ?)");
 
         case '>':
             if (match('=')) {
@@ -114,16 +114,16 @@ Token Lexer::readOperator() {
             if (match('&')) {
                 return Token(TokenType::LOGICAL_AND, "&&", startPos);
             }
-            throw std::runtime_error("未知的字符: & (是否想使用 && ?)");
+            throw std::runtime_error("Unknown character: & (did you mean && ?)");
 
         case '|':
             if (match('|')) {
                 return Token(TokenType::LOGICAL_OR, "||", startPos);
             }
-            throw std::runtime_error("未知的字符: | (是否想使用 || ?)");
+            throw std::runtime_error("Unknown character: | (did you mean || ?)");
 
         default:
-            throw std::runtime_error(std::string("未知的字符: ") + c);
+            throw std::runtime_error(std::string("Unknown character: ") + c);
     }
 }
 

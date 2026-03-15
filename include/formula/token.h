@@ -1,18 +1,18 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 
 namespace formula {
 
 /**
- * Token 类型枚举
+ * Token type enumeration
  */
 enum class TokenType {
-    // 字面量
-    NUMBER,         // 数字
-    IDENTIFIER,     // 标识符（变量名、函数名）
+    // Literals
+    NUMBER,         // Number
+    IDENTIFIER,     // Identifier (variable name, function name)
 
-    // 算术运算符
+    // Arithmetic operators
     PLUS,           // +
     MINUS,          // -
     MULTIPLY,       // *
@@ -20,7 +20,7 @@ enum class TokenType {
     MODULO,         // %
     POWER,          // ^
 
-    // 比较运算符
+    // Comparison operators
     GREATER,        // >
     LESS,           // <
     EQUAL,          // ==
@@ -28,29 +28,29 @@ enum class TokenType {
     LESS_EQUAL,     // <=
     NOT_EQUAL,      // !=
 
-    // 逻辑运算符
+    // Logical operators
     LOGICAL_AND,    // &&
     LOGICAL_OR,     // ||
     LOGICAL_NOT,    // !
 
-    // 三元运算符
+    // Ternary operator
     QUESTION,       // ?
     COLON,          // :
 
-    // 括号
+    // Parentheses
     LEFT_PAREN,     // (
     RIGHT_PAREN,    // )
 
-    // 逗号（函数参数分隔）
+    // Comma (function argument separator)
     COMMA,          // ,
 
-    // 结束标记
-    END,            // 输入结束
-    INVALID         // 无效Token
+    // End markers
+    END,            // End of input
+    INVALID         // Invalid token
 };
 
 /**
- * Token 结构
+ * Token structure
  */
 struct Token {
     TokenType type;
@@ -64,7 +64,7 @@ struct Token {
 };
 
 /**
- * 将 TokenType 转换为字符串
+ * Convert TokenType to string
  */
 const char* tokenTypeToString(TokenType type);
 

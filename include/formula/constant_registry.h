@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <unordered_map>
@@ -9,7 +9,7 @@
 namespace formula {
 
 /**
- * 常量异常
+ * Constant exception
  */
 class ConstantException : public std::runtime_error {
 public:
@@ -17,33 +17,33 @@ public:
 };
 
 /**
- * 常量注册表
- * 管理预定义的数学常量
+ * Constant registry
+ * Manages predefined mathematical constants
  */
 class ConstantRegistry {
 public:
     ConstantRegistry();
 
-    // 注册常量
+    // Register constant
     bool registerConstant(const std::string& name, double value);
 
-    // 获取常量值
+    // Get constant value
     double getConstant(const std::string& name) const;
 
-    // 检查常量是否存在
+    // Check if constant exists
     bool hasConstant(const std::string& name) const;
 
-    // 注销常量
+    // Unregister constant
     bool unregisterConstant(const std::string& name);
 
-    // 获取所有常量名
+    // Get all constant names
     std::vector<std::string> getConstantNames() const;
 
 private:
     std::unordered_map<std::string, double> constants_;
     mutable std::shared_mutex mutex_;
 
-    // 注册默认常量
+    // Register default constants
     void registerDefaultConstants();
 };
 

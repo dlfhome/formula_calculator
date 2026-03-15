@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "formula/value.h"
 #include <string>
@@ -8,7 +8,7 @@
 
 namespace formula {
 
-// 前向声明
+// Forward declarations
 class AstNode;
 class Parser;
 class Evaluator;
@@ -21,99 +21,99 @@ using FunctionPtr = std::function<Value(const std::vector<Value>&)>;
 using LegacyFunctionPtr = std::function<double(const std::vector<double>&)>;
 
 /**
- * 公式计算器类
- * 提供公式编译、求值、变量管理等功能的主入口类
+ * Formula Calculator class
+ * Main entry class providing formula compilation, evaluation, and variable management
  */
 class FormulaCalculator {
 public:
     FormulaCalculator();
     ~FormulaCalculator();
 
-    // 禁止拷贝，允许移动
+    // Disable copy, allow move
     FormulaCalculator(const FormulaCalculator&) = delete;
     FormulaCalculator& operator=(const FormulaCalculator&) = delete;
     FormulaCalculator(FormulaCalculator&&) noexcept;
     FormulaCalculator& operator=(FormulaCalculator&&) noexcept;
 
     /**
-     * 编译公式
-     * @param formula 公式字符串
-     * @return 编译成功返回 true
+     * Compile formula
+     * @param formula Formula string
+     * @return Returns true if compilation succeeds
      */
     bool compile(const std::string& formula);
 
     /**
-     * 计算公式结果
-     * @return 计算结果（Value 类型）
+     * Calculate formula result
+     * @return Calculation result (Value type)
      */
     Value evaluate();
 
 
     /**
-     * 设置变量值
-     * @param name 变量名
-     * @param value 变量值（Value 类型）
+     * Set variable value
+     * @param name Variable name
+     * @param value Variable value (Value type)
      */
     void setVariable(const std::string& name, const Value& value);
 
     /**
-     * 获取变量值
-     * @param name 变量名
-     * @return 变量值（Value 类型）
+     * Get variable value
+     * @param name Variable name
+     * @return Variable value (Value type)
      */
     Value getVariable(const std::string& name) const;
 
     /**
-     * 检查变量是否存在
-     * @param name 变量名
-     * @return 存在返回 true
+     * Check if variable exists
+     * @param name Variable name
+     * @return Returns true if exists
      */
     bool hasVariable(const std::string& name) const;
 
     /**
-     * 注册自定义函数（Value 版本）
-     * @param name 函数名
-     * @param func 函数实现
-     * @param arity 参数个数，-1 表示可变参数
-     * @return 注册成功返回 true
+     * Register custom function (Value version)
+     * @param name Function name
+     * @param func Function implementation
+     * @param arity Number of arguments, -1 for variadic
+     * @return Returns true if registration succeeds
      */
     bool registerFunction(const std::string& name, FunctionPtr func, int arity = -1);
 
     /**
-     * 注册自定义函数（double 版本，保持向后兼容）
-     * @param name 函数名
-     * @param func 函数实现
-     * @param arity 参数个数，-1 表示可变参数
-     * @return 注册成功返回 true
+     * Register custom function (double version, for backward compatibility)
+     * @param name Function name
+     * @param func Function implementation
+     * @param arity Number of arguments, -1 for variadic
+     * @return Returns true if registration succeeds
      */
     bool registerFunction(const std::string& name, LegacyFunctionPtr func, int arity = -1);
 
     /**
-     * 获取最后一次错误信息
-     * @return 错误信息字符串
+     * Get last error message
+     * @return Error message string
      */
     std::string getLastError() const;
 
     /**
-     * 清空所有状态（变量、AST等）
+     * Clear all state (variables, AST, etc.)
      */
     void clear();
 
     /**
-     * 获取支持的函数列表
-     * @return 函数名列表
+     * Get list of supported functions
+     * @return Function name list
      */
     std::vector<std::string> getSupportedFunctions() const;
 
     /**
-     * 获取支持的常量列表
-     * @return 常量名列表
+     * Get list of supported constants
+     * @return Constant name list
      */
     std::vector<std::string> getSupportedConstants() const;
 
     /**
-     * 检查公式是否已编译
-     * @return 已编译返回 true
+     * Check if formula is compiled
+     * @return Returns true if compiled
      */
     bool isCompiled() const;
 

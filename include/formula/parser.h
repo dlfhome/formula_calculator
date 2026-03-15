@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "formula/token.h"
 #include "formula/ast.h"
@@ -10,7 +10,7 @@
 namespace formula {
 
 /**
- * 解析异常
+ * Parse exception
  */
 class ParseException : public std::runtime_error {
 public:
@@ -18,18 +18,18 @@ public:
 };
 
 /**
- * 语法分析器
- * 使用递归下降解析算法
+ * Parser
+ * Uses recursive descent parsing algorithm
  */
 class Parser {
 public:
     Parser(const std::vector<Token>& tokens,
            std::shared_ptr<FunctionRegistry> funcRegistry);
 
-    // 解析 Token 序列，返回 AST 根节点
+    // Parse token sequence, return AST root node
     std::unique_ptr<AstNode> parse();
 
-    // 获取解析错误
+    // Get parse error
     bool hasError() const;
     std::string getError() const;
 
@@ -39,7 +39,7 @@ private:
     std::shared_ptr<FunctionRegistry> funcRegistry_;
     std::string error_;
 
-    // 递归下降解析函数（按优先级从低到高）
+    // Recursive descent parsing functions (by precedence from low to high)
     // expression : ternary
     std::unique_ptr<AstNode> expression();
 
@@ -73,7 +73,7 @@ private:
     // primary : NUMBER | IDENTIFIER | IDENTIFIER '(' argument_list ')' | '(' expression ')'
     std::unique_ptr<AstNode> primary();
 
-    // 辅助函数
+    // Helper functions
     bool match(TokenType type);
     bool match(std::initializer_list<TokenType> types);
     Token consume(TokenType type, const std::string& message);

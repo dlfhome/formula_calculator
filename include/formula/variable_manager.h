@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "formula/value.h"
 #include <string>
@@ -10,7 +10,7 @@
 namespace formula {
 
 /**
- * 变量异常
+ * Variable exception
  */
 class VariableException : public std::runtime_error {
 public:
@@ -18,38 +18,38 @@ public:
 };
 
 /**
- * 变量管理器
- * 管理公式中使用的变量及其值
+ * Variable manager
+ * Manages variables and their values used in formulas
  */
 class VariableManager {
 public:
     VariableManager() = default;
 
-    // 设置变量值（double 版本，保持向后兼容）
+    // Set variable value (double version, for backward compatibility)
     void setVariable(const std::string& name, double value);
 
-    // 设置变量值（Value 版本）
+    // Set variable value (Value version)
     void setVariable(const std::string& name, const Value& value);
 
-    // 获取变量值，不存在则抛出异常
+    // Get variable value, throws exception if not exists
     Value getVariable(const std::string& name) const;
 
-    // 获取变量值（double 版本，保持向后兼容）
+    // Get variable value (double version, for backward compatibility)
     double getVariableAsDouble(const std::string& name) const;
 
-    // 检查变量是否存在
+    // Check if variable exists
     bool hasVariable(const std::string& name) const;
 
-    // 删除变量
+    // Remove variable
     bool removeVariable(const std::string& name);
 
-    // 清空所有变量
+    // Clear all variables
     void clear();
 
-    // 获取所有变量名
+    // Get all variable names
     std::vector<std::string> getVariableNames() const;
 
-    // 获取变量数量
+    // Get variable count
     size_t getVariableCount() const;
 
 private:

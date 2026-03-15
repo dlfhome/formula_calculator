@@ -1,7 +1,7 @@
-/**
- * 三元运算符测试
- * 测试 条件?真值:假值 运算符
- * 包括嵌套三元运算符和短路求值
+﻿/**
+ * Ternary Operator Tests
+ * Test condition?true_value:false_value operator
+ * Including nested ternary operators and short-circuit evaluation
  */
 
 #include <iostream>
@@ -9,13 +9,13 @@
 #include <vector>
 #include <string>
 
-// 测试辅助宏
+// Test helper macros
 #define TEST(name) void test_##name()
 #define RUN_TEST(name) \
     do { \
-        std::cout << "  运行 " << #name << "... "; \
+        std::cout << "  Running " << #name << "... "; \
         test_##name(); \
-        std::cout << "通过" << std::endl; \
+        std::cout << "Passed" << std::endl; \
     } while(0)
 #define ASSERT_TRUE(expr) assert(expr)
 #define ASSERT_FALSE(expr) assert(!(expr))
@@ -24,15 +24,15 @@
 
 namespace formula {
 
-// 模拟三元运算符（使用宏实现短路求值）
+// Mock ternary operator (using macro to implement short-circuit evaluation)
 #define ternary(condition, trueValue, falseValue) ((condition) ? (trueValue) : (falseValue))
 
-// 数值转布尔
+// Numeric to boolean conversion
 bool toBool(double value) {
     return value != 0.0;
 }
 
-// 短路求值追踪器
+// Short-circuit evaluation tracker
 class ShortCircuitTracker {
 public:
     std::vector<std::string> evaluated;
@@ -56,9 +56,9 @@ public:
 
 using namespace formula;
 
-// ==================== 测试用例 ====================
+// ==================== Test Cases ====================
 
-// 基本三元运算符测试
+// Basic ternary operator test
 TEST(ternary_basic) {
     // true ? a : b = a
     ASSERT_EQ(ternary(true, 10, 20), 10);
@@ -69,19 +69,19 @@ TEST(ternary_basic) {
     ASSERT_EQ(ternary(false, 1.5, 2.5), 2.5);
 }
 
-// 数值条件测试（非零为真，零为假）
+// Numeric condition test (non-zero is true, zero is false)
 TEST(ternary_numeric_condition) {
-    // 非零值作为 true
+    // Non-zero value as true
     ASSERT_EQ(ternary(toBool(1.0), 100, 200), 100);
     ASSERT_EQ(ternary(toBool(-5.0), 100, 200), 100);
     ASSERT_EQ(ternary(toBool(0.001), 100, 200), 100);
 
-    // 零值作为 false
+    // Zero value as false
     ASSERT_EQ(ternary(toBool(0.0), 100, 200), 200);
     ASSERT_EQ(ternary(toBool(-0.0), 100, 200), 200);
 }
 
-// 不同类型返回值测试
+// Different return type test
 TEST(ternary_return_types) {
     // int 类型
     ASSERT_EQ(ternary(true, 42, 0), 42);
@@ -96,7 +96,7 @@ TEST(ternary_return_types) {
     ASSERT_EQ(ternary(false, true, false), false);
 }
 
-// 嵌套三元运算符测试
+// Nested ternary operator test
 TEST(ternary_nested) {
     // 单层嵌套: a ? b : (c ? d : e)
     // true ? 1 : (false ? 2 : 3) = 1
@@ -108,7 +108,7 @@ TEST(ternary_nested) {
     // false ? 1 : (false ? 2 : 3) = 3
     ASSERT_EQ(ternary(false, 1, ternary(false, 2, 3)), 3);
 
-    // 多层嵌套
+    // Multi-level nesting
     // true ? (false ? 10 : 20) : (true ? 30 : 40) = 20
     ASSERT_EQ(ternary(true,
                       ternary(false, 10, 20),
@@ -120,7 +120,7 @@ TEST(ternary_nested) {
                       ternary(false, 30, 40)), 40);
 }
 
-// 三元运算符作为条件
+// Ternary operator as condition
 TEST(ternary_as_condition) {
     // (a ? b : c) ? d : e
     // (true ? true : false) ? 100 : 200 = 100
@@ -132,7 +132,7 @@ TEST(ternary_as_condition) {
     ASSERT_EQ(ternary(inner, 100, 200), 200);
 }
 
-// 短路求值测试 - 真值分支
+// Short-circuit evaluation test - true branch
 TEST(ternary_short_circuit_true_branch) {
     ShortCircuitTracker tracker;
 
@@ -147,10 +147,10 @@ TEST(ternary_short_circuit_true_branch) {
     ASSERT_EQ(tracker.evaluated.size(), 2);
     ASSERT_EQ(tracker.evaluated[0], "condition");
     ASSERT_EQ(tracker.evaluated[1], "trueBranch");
-    // falseBranch 不应被求值
+    // falseBranch should not be evaluated
 }
 
-// 短路求值测试 - 假值分支
+// Short-circuit evaluation test - false branch
 TEST(ternary_short_circuit_false_branch) {
     ShortCircuitTracker tracker;
 
@@ -165,10 +165,10 @@ TEST(ternary_short_circuit_false_branch) {
     ASSERT_EQ(tracker.evaluated.size(), 2);
     ASSERT_EQ(tracker.evaluated[0], "condition");
     ASSERT_EQ(tracker.evaluated[1], "falseBranch");
-    // trueBranch 不应被求值
+    // trueBranch should not be evaluated
 }
 
-// 复杂嵌套短路求值
+// Complex nested short-circuit evaluation
 TEST(ternary_nested_short_circuit) {
     ShortCircuitTracker tracker;
 
@@ -185,16 +185,16 @@ TEST(ternary_nested_short_circuit) {
                 tracker.trackAndReturn("false2", 4.0))
     );
     ASSERT_EQ(result, 3.0);
-    // 应该求值: outerCond, innerCond2, true2
+    // Should evaluate: outerCond, innerCond2, true2
     ASSERT_EQ(tracker.evaluated.size(), 3);
     ASSERT_EQ(tracker.evaluated[0], "outerCond");
     ASSERT_EQ(tracker.evaluated[1], "innerCond2");
     ASSERT_EQ(tracker.evaluated[2], "true2");
 }
 
-// 边界值测试
+// Boundary value test
 TEST(ternary_boundary_values) {
-    // 极大极小值
+    // Large and small values
     double max = 1e308;
     double min = -1e308;
     ASSERT_EQ(ternary(true, max, min), max);
@@ -204,12 +204,12 @@ TEST(ternary_boundary_values) {
     ASSERT_EQ(ternary(true, 0.0, 1.0), 0.0);
     ASSERT_EQ(ternary(false, 1.0, 0.0), 0.0);
 
-    // 相等值
+    // Equal values
     ASSERT_EQ(ternary(true, 42.0, 42.0), 42.0);
     ASSERT_EQ(ternary(false, 42.0, 42.0), 42.0);
 }
 
-// 实际应用场景测试
+// Real-world scenario test
 TEST(ternary_real_world_usage) {
     // 绝对值: x >= 0 ? x : -x
     auto abs = [](double x) {
@@ -243,7 +243,7 @@ TEST(ternary_real_world_usage) {
     ASSERT_EQ(sign(-5), -1);
     ASSERT_EQ(sign(0), 0);
 
-    // 钳制函数: x < min ? min : (x > max ? max : x)
+    // Clamp function: x < min ? min : (x > max ? max : x)
     auto clamp = [](double x, double minVal, double maxVal) {
         return ternary(x < minVal, minVal,
                       ternary(x > maxVal, maxVal, x));
@@ -253,7 +253,7 @@ TEST(ternary_real_world_usage) {
     ASSERT_EQ(clamp(150, 0, 100), 100);
 }
 
-// 与比较运算符组合
+// Combined with comparison operators
 TEST(ternary_with_comparison) {
     // 成绩等级: score >= 90 ? "A" : (score >= 80 ? "B" : "C")
     auto getGrade = [](double score) {
@@ -267,7 +267,7 @@ TEST(ternary_with_comparison) {
     ASSERT_EQ(getGrade(50), 4);  // D
 }
 
-// 与逻辑运算符组合
+// Combined with logical operators
 TEST(ternary_with_logical) {
     // (a && b) ? x : y
     auto result = ternary(true && true, 100, 200);
@@ -291,9 +291,9 @@ TEST(ternary_with_logical) {
     ASSERT_EQ(result, 100);
 }
 
-// 类型提升测试
+// Type promotion test
 TEST(ternary_type_promotion) {
-    // int 和 double 混合，结果应为 double
+    // int and double mixed, result should be double
     double result = ternary(true, 5, 3.14);  // int 5 提升为 double
     ASSERT_NEAR(result, 5.0, 1e-10);
 
@@ -308,36 +308,36 @@ TEST(ternary_type_promotion) {
     ASSERT_EQ(intResult, 0);
 }
 
-// ==================== 主函数 ====================
+// ==================== Main Function ====================
 
 int main() {
     std::cout << "========================================" << std::endl;
-    std::cout << "三元运算符测试套件" << std::endl;
+    std::cout << "Ternary Operator Test Suite" << std::endl;
     std::cout << "========================================" << std::endl;
     std::cout << std::endl;
 
-    std::cout << "【基本功能测试】" << std::endl;
+    std::cout << "[Basic Function Tests]" << std::endl;
     RUN_TEST(ternary_basic);
     RUN_TEST(ternary_numeric_condition);
     RUN_TEST(ternary_return_types);
     std::cout << std::endl;
 
-    std::cout << "【嵌套三元运算符测试】" << std::endl;
+    std::cout << "[Nested Ternary Operator Tests]" << std::endl;
     RUN_TEST(ternary_nested);
     RUN_TEST(ternary_as_condition);
     std::cout << std::endl;
 
-    std::cout << "【短路求值测试】" << std::endl;
+    std::cout << "[Short-circuit Evaluation Tests]" << std::endl;
     RUN_TEST(ternary_short_circuit_true_branch);
     RUN_TEST(ternary_short_circuit_false_branch);
     RUN_TEST(ternary_nested_short_circuit);
     std::cout << std::endl;
 
-    std::cout << "【边界值测试】" << std::endl;
+    std::cout << "[Boundary Value Tests]" << std::endl;
     RUN_TEST(ternary_boundary_values);
     std::cout << std::endl;
 
-    std::cout << "【实际应用场景测试】" << std::endl;
+    std::cout << "[Real-world Scenario Tests]" << std::endl;
     RUN_TEST(ternary_real_world_usage);
     RUN_TEST(ternary_with_comparison);
     RUN_TEST(ternary_with_logical);
@@ -345,7 +345,7 @@ int main() {
     std::cout << std::endl;
 
     std::cout << "========================================" << std::endl;
-    std::cout << "所有测试通过！" << std::endl;
+    std::cout << "All tests passed!" << std::endl;
     std::cout << "========================================" << std::endl;
 
     return 0;

@@ -1,13 +1,13 @@
-/**
- * Value 类型测试
- * 测试多类型值系统（bool、int、double）的构造、类型检查和转换
+﻿/**
+ * Value Type Tests
+ * Test multi-type value system (bool, int, double) construction, type checking and conversion
  */
 
 #include <iostream>
 #include <cassert>
 #include <cmath>
 
-// 模拟 Value 类型实现（待实际实现时替换为真实头文件）
+// Mock Value type implementation (replace with real header when implemented)
 namespace formula {
 
 enum class ValueType {
@@ -68,22 +68,22 @@ private:
 
 using namespace formula;
 
-// 测试辅助宏
+// Test helper macros
 #define TEST(name) void test_##name()
 #define RUN_TEST(name) \
     do { \
-        std::cout << "  运行 " << #name << "... "; \
+        std::cout << "  Running " << #name << "... "; \
         test_##name(); \
-        std::cout << "通过" << std::endl; \
+        std::cout << "Passed" << std::endl; \
     } while(0)
 #define ASSERT_TRUE(expr) assert(expr)
 #define ASSERT_FALSE(expr) assert(!(expr))
 #define ASSERT_EQ(a, b) assert((a) == (b))
 #define ASSERT_NEAR(a, b, eps) assert(std::abs((a) - (b)) < (eps))
 
-// ==================== 测试用例 ====================
+// ==================== Test Cases ====================
 
-// Bool 类型构造和检查
+// Bool type construction and checking
 TEST(bool_construction) {
     Value v1(true);
     ASSERT_TRUE(v1.isBool());
@@ -96,7 +96,7 @@ TEST(bool_construction) {
     ASSERT_FALSE(v2.asBool());
 }
 
-// Int 类型构造和检查
+// Int type construction and checking
 TEST(int_construction) {
     Value v1(42);
     ASSERT_FALSE(v1.isBool());
@@ -113,7 +113,7 @@ TEST(int_construction) {
     ASSERT_EQ(v3.asInt(), 0);
 }
 
-// Double 类型构造和检查
+// Double type construction and checking
 TEST(double_construction) {
     Value v1(3.14159);
     ASSERT_FALSE(v1.isBool());
@@ -130,7 +130,7 @@ TEST(double_construction) {
     ASSERT_NEAR(v3.asDouble(), 0.0, 1e-10);
 }
 
-// Bool 到其他类型的转换
+// Bool to other type conversions
 TEST(bool_conversion) {
     Value v1(true);
     ASSERT_EQ(v1.asBool(), true);
@@ -143,7 +143,7 @@ TEST(bool_conversion) {
     ASSERT_NEAR(v2.asDouble(), 0.0, 1e-10);
 }
 
-// Int 到其他类型的转换
+// Int to other type conversions
 TEST(int_conversion) {
     Value v1(42);
     ASSERT_EQ(v1.asBool(), true);  // 非零转换为 true
@@ -160,7 +160,7 @@ TEST(int_conversion) {
     ASSERT_EQ(v3.asInt(), -5);
 }
 
-// Double 到其他类型的转换
+// Double to other type conversions
 TEST(double_conversion) {
     Value v1(3.7);
     ASSERT_EQ(v1.asBool(), true);
@@ -178,9 +178,9 @@ TEST(double_conversion) {
     ASSERT_EQ(v4.asInt(), -3);  // 负数截断
 }
 
-// 边界值测试
+// Boundary value test
 TEST(boundary_values) {
-    // 最大/最小 int
+    // Max/min int
     Value v1(INT_MAX);
     ASSERT_EQ(v1.asInt(), INT_MAX);
     ASSERT_TRUE(v1.asBool());
@@ -189,40 +189,40 @@ TEST(boundary_values) {
     ASSERT_EQ(v2.asInt(), INT_MIN);
     ASSERT_TRUE(v2.asBool());
 
-    // 极大/极小 double
+    // Large/small double
     Value v3(1e308);
     ASSERT_NEAR(v3.asDouble(), 1e308, 1e298);
 
     Value v4(-1e308);
     ASSERT_NEAR(v4.asDouble(), -1e308, 1e298);
 
-    // 接近零的 double
+    // Near-zero double
     Value v5(1e-10);
     ASSERT_TRUE(v5.asBool());  // 非零即 true
     ASSERT_EQ(v5.asInt(), 0);  // 转换为 int 后为 0
 }
 
-// 类型提升规则测试
+// Type promotion test
 TEST(type_promotion) {
-    // 在实际实现中，类型提升应该在运算时发生
-    // 这里测试 Value 本身支持的各种类型
+    // In actual implementation, type promotion should happen during operations
+    // Here we test the various types supported by Value itself
 
-    // bool + int 场景（预期 int）
+    // bool + int scenario (expect int)
     Value boolVal(true);
     Value intVal(5);
     ASSERT_EQ(boolVal.asInt() + intVal.asInt(), 6);
 
-    // int + double 场景（预期 double）
+    // int + double scenario (expect double)
     Value doubleVal(2.5);
     ASSERT_NEAR(intVal.asDouble() + doubleVal.asDouble(), 7.5, 1e-10);
 
-    // bool + double 场景（预期 double）
+    // bool + double scenario (expect double)
     ASSERT_NEAR(boolVal.asDouble() + doubleVal.asDouble(), 3.5, 1e-10);
 }
 
-// 默认值测试
+// Default value test
 TEST(default_values) {
-    Value v;  // 默认构造
+    Value v;  // Default construction
     ASSERT_TRUE(v.isDouble());  // 默认应为 double 类型
     ASSERT_NEAR(v.asDouble(), 0.0, 1e-10);
 }
@@ -231,39 +231,39 @@ TEST(default_values) {
 
 int main() {
     std::cout << "========================================" << std::endl;
-    std::cout << "Value 类型测试套件" << std::endl;
+    std::cout << "Value 类型TestSuite" << std::endl;
     std::cout << "========================================" << std::endl;
     std::cout << std::endl;
 
-    std::cout << "【Bool 类型测试】" << std::endl;
+    std::cout << "[Bool Type Tests]" << std::endl;
     RUN_TEST(bool_construction);
     RUN_TEST(bool_conversion);
     std::cout << std::endl;
 
-    std::cout << "【Int 类型测试】" << std::endl;
+    std::cout << "[Int Type Tests]" << std::endl;
     RUN_TEST(int_construction);
     RUN_TEST(int_conversion);
     std::cout << std::endl;
 
-    std::cout << "【Double 类型测试】" << std::endl;
+    std::cout << "[Double Type Tests]" << std::endl;
     RUN_TEST(double_construction);
     RUN_TEST(double_conversion);
     std::cout << std::endl;
 
-    std::cout << "【边界值测试】" << std::endl;
+    std::cout << "[Boundary Value Tests]" << std::endl;
     RUN_TEST(boundary_values);
     std::cout << std::endl;
 
-    std::cout << "【类型提升测试】" << std::endl;
+    std::cout << "[Type Promotion Tests]" << std::endl;
     RUN_TEST(type_promotion);
     std::cout << std::endl;
 
-    std::cout << "【默认值测试】" << std::endl;
+    std::cout << "[Default Value Tests]" << std::endl;
     RUN_TEST(default_values);
     std::cout << std::endl;
 
     std::cout << "========================================" << std::endl;
-    std::cout << "所有测试通过！" << std::endl;
+    std::cout << "All tests passed!" << std::endl;
     std::cout << "========================================" << std::endl;
 
     return 0;
